@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
     model = MAE_ViT(mask_ratio=args.mask_ratio).to(device)
     if device == 'cuda':
-        net = torch.nn.DataParallel(model)
+        model = torch.nn.DataParallel(model)    
 
     optim = torch.optim.AdamW(model.parameters(), lr=args.base_learning_rate * args.batch_size / 256, betas=(0.9, 0.95), weight_decay=args.weight_decay)
     lr_func = lambda epoch: min((epoch + 1) / (args.warmup_epoch + 1e-8), 0.5 * (math.cos(epoch / args.total_epoch * math.pi) + 1))

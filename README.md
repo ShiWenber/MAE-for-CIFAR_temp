@@ -24,6 +24,7 @@ CIFAR10
 # pretrained with mae
 python mae_pretrain.py
 ```
+CUDA_VISIBLE_DEVICES=0,1 python mae_pretrain.py
 
 训练未用MAE的分类器，也就是从头开始训练分类器
 
