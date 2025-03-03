@@ -20,11 +20,14 @@ CIFAR10
 
 首先进行预训练
 
-```python
+```bash
 # pretrained with mae
 python mae_pretrain.py
 ```
-CUDA_VISIBLE_DEVICES=0,1 python mae_pretrain.py
+
+```bash
+CUDA_VISIBLE_DEVICES=0,1 python mae_pretrain.py --batch_size 3072 --max_device_batch_size 1536
+```
 
 训练未用MAE的分类器，也就是从头开始训练分类器
 
