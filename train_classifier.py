@@ -47,7 +47,7 @@ if __name__ == '__main__':
     model = ViT_Classifier(model.encoder, num_classes=10).to(device)
     
     if device == 'cuda':
-        net = torch.nn.DataParallel(model)
+        model = torch.nn.DataParallel(model)
     loss_fn = torch.nn.CrossEntropyLoss()
     acc_fn = lambda logit, label: torch.mean((logit.argmax(dim=-1) == label).float())
 

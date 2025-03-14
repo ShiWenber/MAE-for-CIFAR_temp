@@ -36,6 +36,10 @@ CUDA_VISIBLE_DEVICES=0,1 python mae_pretrain.py --batch_size 3072 --max_device_b
 python train_classifier.py
 ```
 
+```bash
+CUDA_VISIBLE_DEVICES=0,1 python train_classifier.py --batch_size 1024  --max_device_batch_size 2048
+```
+
 利用训练好的MAE的encoder作为输入，构建的分类模型作为分类器
 
 ```python
