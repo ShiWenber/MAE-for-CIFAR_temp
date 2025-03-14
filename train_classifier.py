@@ -41,6 +41,9 @@ if __name__ == '__main__':
     if args.pretrained_model_path is not None:
         model = torch.load(args.pretrained_model_path, map_location='cpu')
         writer = SummaryWriter(os.path.join('logs', 'cifar10', 'pretrain-cls'))
+        # 如果 model 是 dataparallel 类存储的需要去除 module 前缀才能作为单卡模型正常使用
+        if isinstance(model, torch.nn.DataParallel):
+            model = model.module
     else:
         model = MAE_ViT()
         writer = SummaryWriter(os.path.join('logs', 'cifar10', 'scratch-cls'))
