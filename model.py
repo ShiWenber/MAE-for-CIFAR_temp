@@ -60,7 +60,7 @@ class MAE_Encoder(torch.nn.Module):
         self.transformer = torch.nn.Sequential(*[Block(emb_dim, num_head) for _ in range(num_layer)])
         
         # ViT的laynorm
-        self.layer_norm = torch.nn.LayerNorm(emb_dim)
+        self.layer_norm = torch.nn.LayerNorm(emb_dim)   #定义归一化 
 
         self.init_weight()
         
@@ -78,7 +78,7 @@ class MAE_Encoder(torch.nn.Module):
 
         patches = torch.cat([self.cls_token.expand(-1, patches.shape[1], -1), patches], dim=0)
         patches = rearrange(patches, 't b c -> b t c')
-        features = self.layer_norm(self.transformer(patches))
+        features = self.layer_norm(self.transformer(patches))  #归一化
         features = rearrange(features, 'b t c -> t b c')
 
         return features, backward_indexes
@@ -156,7 +156,7 @@ class ViT_Classifier(torch.nn.Module):
         self.pos_embedding = encoder.pos_embedding
         self.patchify = encoder.patchify
         self.transformer = encoder.transformer
-        self.layer_norm = encoder.layer_norm
+        self.layer_norm = encoder.layer_norm    #定义归一化
         self.head = torch.nn.Linear(self.pos_embedding.shape[-1], num_classes)
 
     def forward(self, img):
@@ -165,7 +165,7 @@ class ViT_Classifier(torch.nn.Module):
         patches = patches + self.pos_embedding
         patches = torch.cat([self.cls_token.expand(-1, patches.shape[1], -1), patches], dim=0)
         patches = rearrange(patches, 't b c -> b t c')
-        features = self.layer_norm(self.transformer(patches))
+        features = self.layer_norm(self.transformer(patches))   #归一化
         features = rearrange(features, 'b t c -> t b c')
         logits = self.head(features[0])
         return logits

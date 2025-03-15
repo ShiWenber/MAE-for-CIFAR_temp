@@ -26,7 +26,11 @@ python mae_pretrain.py
 ```
 
 ```bash
-CUDA_VISIBLE_DEVICES=0,1 python mae_pretrain.py --batch_size 3072 --max_device_batch_size 1536
+CUDA_VISIBLE_DEVICES=0,1 python mae_pretrain.py --batch_size 3072 --max_device_batch_size 1536 --model_path vit-t-mae.pth
+```
+
+```bash
+CUDA_VISIBLE_DEVICES=0,1 python mae_pretrain.py --batch_size 3072 --max_device_batch_size 1536 --dyt True --model_path vit-t-mae-dyt.pth # 将所有 layer norm 替换为 DyT
 ```
 
 训练未用MAE的分类器，也就是从头开始训练分类器
@@ -38,6 +42,10 @@ python train_classifier.py
 
 ```bash
 CUDA_VISIBLE_DEVICES=0,1 python train_classifier.py --batch_size 1024  --max_device_batch_size 2048
+```
+
+```bash
+CUDA_VISIBLE_DEVICES=0,1 python train_classifier.py --batch_size 1024  --max_device_batch_size 2048 --pretrained_model_path vit-t-mae-dyt.pth --output_model_path vit-t-classifier-dyt.pth # 使用 DyT 训练分类器
 ```
 
 利用训练好的MAE的encoder作为输入，构建的分类模型作为分类器

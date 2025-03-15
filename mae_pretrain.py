@@ -9,6 +9,7 @@ from tqdm import tqdm
 
 from model import *
 from utils import setup_seed
+from dynamic_tanh import convert_ln_to_dyt, DynamicTanh
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -21,6 +22,7 @@ if __name__ == '__main__':
     parser.add_argument('--total_epoch', type=int, default=2000)
     parser.add_argument('--warmup_epoch', type=int, default=200)
     parser.add_argument('--model_path', type=str, default='vit-t-mae.pth')
+    parser.add_argument('--dyt', type=bool, default=False)
 
     args = parser.parse_args()
 
@@ -38,7 +40,13 @@ if __name__ == '__main__':
     writer = SummaryWriter(os.path.join('logs', 'cifar10', 'mae-pretrain'))
     device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-    model = MAE_ViT(mask_ratio=args.mask_ratio).to(device)
+    model = MAE_ViT(mask_ratio=args.mask_ratio)
+    if args.dyt:
+        # model 中所有的 LayerNorm 都被替换为了 DynamicTanh 不只有 encoder.layer_norm
+        model = convert_ln_to_dyt(model)
+        assert isinstance(model.encoder.layer_norm, DynamicTanh)
+    model.to(device)
+
     if device == 'cuda':
         model = torch.nn.DataParallel(model)    
 
